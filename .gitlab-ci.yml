@@ -8,7 +8,7 @@ workflow:
           
 stages:
   - test
-  - reporting
+  # - reporting
   - containerization
   - dev-deploy
   - stage-deploy
@@ -77,12 +77,12 @@ unit_testing:
     reports:
       junit: test-results.xml
 
-reporting:
-  stage: reporting
-  tags:
-    - docker
-    - linux
-    - aws
+# reporting:
+#   stage: reporting
+#   tags:
+#     - docker
+#     - linux
+#     - aws
 
 code_coverage:
   stage: test
