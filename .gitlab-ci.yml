@@ -34,6 +34,7 @@ variables:
   services:
     - name: siddharth67/mongo-db:non-prod
       alias: mongo
+      entrypoint: ["--auth", "--bind_ip", "0.0.0.0"]
       pull_policy: always
   variables:
     MONGO_URI: 'mongodb://mongo:27017/superData'
