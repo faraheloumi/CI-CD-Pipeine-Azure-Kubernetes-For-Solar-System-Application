@@ -65,10 +65,10 @@ variables:
     
 unit_testing:
   stage: test
-  extends: .prepare_nodejs_environment
-  # image: node:17-alpine3.14
-  # before_script:
-    # - npm install  
+  # extends: .prepare_nodejs_environment
+  image: node:17-alpine3.14
+  before_script:
+    - npm install  
   script:
     - npm test
   artifacts:
