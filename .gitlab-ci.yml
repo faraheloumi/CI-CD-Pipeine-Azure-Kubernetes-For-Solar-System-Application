@@ -34,7 +34,6 @@ variables:
   services:
     - name: siddharth67/mongo-db:non-prod
       alias: mongo
-      entrypoint: ["--auth", "--bind_ip", "0.0.0.0"]
       pull_policy: always
   variables:
     MONGO_URI: 'mongodb://mongo:27017/superData'
@@ -66,10 +65,10 @@ variables:
     
 unit_testing:
   stage: test
-  # extends: .prepare_nodejs_environment
-  image: node:17-alpine3.14
-  before_script:
-    - npm install  
+  extends: .prepare_nodejs_environment
+  # image: node:17-alpine3.14
+  # before_script:
+    # - npm install  
   script:
     - npm test
   artifacts:
