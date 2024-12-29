@@ -162,69 +162,69 @@ publish_gitlab_container_registry:
     -  docker images
     -  docker push $CI_REGISTRY_IMAGE/ss-image:$IMAGE_VERSION
 
-k8s_dev_deploy:
-  #<<: *kuberntes_deploy_job
-  stage: dev-deploy
-  needs:
-    - docker_push
-  script:
-    - export KUBECONFIG=$DEV_KUBE_CONFIG
-    - kubectl version -o yaml
-    - kubectl config get-contexts
-    - kubectl get nodes
-    - export INGRESS_IP=$(kubectl -n ingress-nginx get services ingress-nginx-controller -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
-    - echo $INGRESS_IP
-    - kubectl -n $NAMESPACE create secret generic mongo-db-creds --from-literal=MONGO_URI=$MONGO_URI --from-literal=MONGO_USERNAME=$MONGO_USERNAME --from-literal=MONGO_PASSWORD=$MONGO_PASSWORD --save-config --dry-run=client -o yaml | kubectl apply -f -
-    - for i in kubernetes/manifest/*.yaml; do envsubst < $i | kubectl apply -f -; done
-    - kubectl -n $NAMESPACE get all,secret,ing
-    - echo "INGRESS_URL=$(kubectl -n $NAMESPACE get ing -o jsonpath="{.items[0].spec.tls[0].hosts[0]}")" >> app_ingress_url.env
-  artifacts:
-    reports:
-      dotenv: app_ingress_url.env
-  environment:
-    name: development
-    url: https://$INGRESS_URL
+# k8s_dev_deploy:
+#   #<<: *kuberntes_deploy_job
+#   stage: dev-deploy
+#   needs:
+#     - docker_push
+#   script:
+#     - export KUBECONFIG=$DEV_KUBE_CONFIG
+#     - kubectl version -o yaml
+#     - kubectl config get-contexts
+#     - kubectl get nodes
+#     - export INGRESS_IP=$(kubectl -n ingress-nginx get services ingress-nginx-controller -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
+#     - echo $INGRESS_IP
+#     - kubectl -n $NAMESPACE create secret generic mongo-db-creds --from-literal=MONGO_URI=$MONGO_URI --from-literal=MONGO_USERNAME=$MONGO_USERNAME --from-literal=MONGO_PASSWORD=$MONGO_PASSWORD --save-config --dry-run=client -o yaml | kubectl apply -f -
+#     - for i in kubernetes/manifest/*.yaml; do envsubst < $i | kubectl apply -f -; done
+#     - kubectl -n $NAMESPACE get all,secret,ing
+#     - echo "INGRESS_URL=$(kubectl -n $NAMESPACE get ing -o jsonpath="{.items[0].spec.tls[0].hosts[0]}")" >> app_ingress_url.env
+#   artifacts:
+#     reports:
+#       dotenv: app_ingress_url.env
+#   environment:
+#     name: development
+#     url: https://$INGRESS_URL
 
-k8s_dev_integration_testing:
-  stage: dev-deploy
-  image: alpine:3.4
-  needs:
-    - k8s_dev_deploy
-  before_script:
-    - apk --no-cache add curl
-    - apk --no-cache add jq
-  script:
-    - echo $INGRESS_URL
-    - curl -s -k https://$INGRESS_URL/live | jq -r .status | grep -i live
-    - curl -s -k https://$INGRESS_URL/ready | jq -r .status | grep -i ready
+# k8s_dev_integration_testing:
+#   stage: dev-deploy
+#   image: alpine:3.4
+#   needs:
+#     - k8s_dev_deploy
+#   before_script:
+#     - apk --no-cache add curl
+#     - apk --no-cache add jq
+#   script:
+#     - echo $INGRESS_URL
+#     - curl -s -k https://$INGRESS_URL/live | jq -r .status | grep -i live
+#     - curl -s -k https://$INGRESS_URL/ready | jq -r .status | grep -i ready
 
-k8s_stage_deploy:
-  <<: *kuberntes_deploy_job
-  stage: stage-deploy
-  when: manual
-  script:
-    - temp_kube_config_file=$(printenv KUBECONFIG)
-    - cat $temp_kube_config_file
-    - kubectl config get-contexts
-    - kubectl config use-context demos-group/solar-system:kk-gitlab-agent
-    - kubectl get po -A
-    - export INGRESS_IP=$(kubectl -n ingress-nginx get services ingress-nginx-controller -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
-    - echo $INGRESS_IP
-    - kubectl -n $NAMESPACE create secret generic mongo-db-creds --from-literal=MONGO_URI=$MONGO_URI --from-literal=MONGO_USERNAME=$MONGO_USERNAME --from-literal=MONGO_PASSWORD=$MONGO_PASSWORD --save-config --dry-run=client -o yaml | kubectl apply -f -
-    - for i in kubernetes/manifest/*.yaml; do envsubst < $i | kubectl apply -f -; done
-    - kubectl -n $NAMESPACE get all,secret,ing
-    - echo "INGRESS_URL=$(kubectl -n $NAMESPACE get ing -o jsonpath="{.items[0].spec.tls[0].hosts[0]}")" >> app_ingress_url.env
-  artifacts:
-    reports:
-      dotenv: app_ingress_url.env
-  environment:
-    name: staging
-    url: https://$INGRESS_URL
+# k8s_stage_deploy:
+#   <<: *kuberntes_deploy_job
+#   stage: stage-deploy
+#   when: manual
+#   script:
+#     - temp_kube_config_file=$(printenv KUBECONFIG)
+#     - cat $temp_kube_config_file
+#     - kubectl config get-contexts
+#     - kubectl config use-context demos-group/solar-system:kk-gitlab-agent
+#     - kubectl get po -A
+#     - export INGRESS_IP=$(kubectl -n ingress-nginx get services ingress-nginx-controller -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
+#     - echo $INGRESS_IP
+#     - kubectl -n $NAMESPACE create secret generic mongo-db-creds --from-literal=MONGO_URI=$MONGO_URI --from-literal=MONGO_USERNAME=$MONGO_USERNAME --from-literal=MONGO_PASSWORD=$MONGO_PASSWORD --save-config --dry-run=client -o yaml | kubectl apply -f -
+#     - for i in kubernetes/manifest/*.yaml; do envsubst < $i | kubectl apply -f -; done
+#     - kubectl -n $NAMESPACE get all,secret,ing
+#     - echo "INGRESS_URL=$(kubectl -n $NAMESPACE get ing -o jsonpath="{.items[0].spec.tls[0].hosts[0]}")" >> app_ingress_url.env
+#   artifacts:
+#     reports:
+#       dotenv: app_ingress_url.env
+#   environment:
+#     name: staging
+#     url: https://$INGRESS_URL
 
-k8s_stage_integration_testing:
-  stage: stage-deploy
-  image: !reference [k8s_dev_integration_testing, image]
-  needs:
-    - k8s_stage_deploy
-  before_script: !reference [k8s_dev_integration_testing, before_script]
-  script: !reference [k8s_dev_integration_testing, script]
+# k8s_stage_integration_testing:
+#   stage: stage-deploy
+#   image: !reference [k8s_dev_integration_testing, image]
+#   needs:
+#     - k8s_stage_deploy
+#   before_script: !reference [k8s_dev_integration_testing, before_script]
+#   script: !reference [k8s_dev_integration_testing, script]
