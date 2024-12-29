@@ -18,6 +18,7 @@ async function connectToDatabase() {
             user: process.env.MONGO_USERNAME,
             pass: process.env.MONGO_PASSWORD,
             useUnifiedTopology: true,
+            useNewUrlParser: true,
         });
         console.log("MongoDB Connection Successful");
     } catch (err) {
