@@ -13,8 +13,8 @@ stages:
   - dev-deploy
   - stage-deploy
 
-include:
-    - local: 'template/aws-reports.yml'
+# include:
+#     - local: 'template/aws-reports.yml'
 #   - component: gitlab.com/gitlab-components/code-quality/code-quality@1.0
 #   - template: Jobs/SAST.gitlab-ci.yml
 #   - component: gitlab.com/gitlab-components/secret-detection/secret-detection@1.0
