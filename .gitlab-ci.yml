@@ -51,16 +51,16 @@ variables:
   before_script:
     - npm install  
 
-# .prepare_deployment_environment: &kuberntes_deploy_job
-#   image:
-#     name: alpine:3.7
-#   dependencies: []
-#   before_script:
-#     - wget https://storage.googleapis.com/kubernetes-release/release/$(wget -q -O - https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
-#     - chmod +x ./kubectl
-#     - mv ./kubectl /usr/bin/kubectl
-#     - apk add --no-cache gettext
-#     - envsubst -V  
+.prepare_deployment_environment: &kuberntes_deploy_job
+  image:
+    name: alpine:3.7
+  dependencies: []
+  before_script:
+    - wget https://storage.googleapis.com/kubernetes-release/release/$(wget -q -O - https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+    - chmod +x ./kubectl
+    - mv ./kubectl /usr/bin/kubectl
+    - apk add --no-cache gettext
+    - envsubst -V  
 
 # code_quality:
 #   stage: ".pre"
