@@ -186,7 +186,7 @@ publish_gitlab_container_registry:
     -  docker push $CI_REGISTRY_IMAGE/ss-image:$IMAGE_VERSION
 
 k8s_dev_deploy:
-  <<: *kuberntes_deploy_job
+  #<<: *kuberntes_deploy_job
   stage: dev-deploy
   needs:
     - docker_push
