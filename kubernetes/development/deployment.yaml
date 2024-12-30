@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   labels:
     app: solar-system
-  name: solar-system
+  name: solar-system-deployment
   namespace: ${NAMESPACE}
 spec:
   replicas: ${REPLICAS}

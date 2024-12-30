@@ -3,7 +3,7 @@ kind: Service
 metadata:
   labels:
     app: solar-system
-  name: solar-system
+  name: solar-system-service
   namespace: ${NAMESPACE}
 spec:
   ports:
