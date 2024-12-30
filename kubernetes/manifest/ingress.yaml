@@ -2,10 +2,8 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    kubernetes.io/ingress.class: nginx
-    kubernetes.io/tls-acme: "true"
-  name: solar-system
-  namespace: ${NAMESPACE}
+    name: solar-system
+    namespace: ${NAMESPACE}
 spec:
     ingressClassName: webapprouting.kubernetes.azure.com
     rules:
