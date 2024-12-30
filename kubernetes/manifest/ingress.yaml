@@ -1,9 +1,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  annotations:
-    name: solar-system
-    namespace: ${NAMESPACE}
+  name: solar-system
+  namespace: ${NAMESPACE}
 spec:
     ingressClassName: webapprouting.kubernetes.azure.com
     rules:
