@@ -3,6 +3,8 @@ kind: Ingress
 metadata:
   name: solar-system
   namespace: ${NAMESPACE}
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
 spec:
     ingressClassName: webapprouting.kubernetes.azure.com
     rules:
@@ -20,3 +22,4 @@ spec:
     - hosts:
       - solar-system.${INGRESS_IP}.nip.io
       secretName: ingress-local-tls
+      
