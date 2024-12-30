@@ -14,12 +14,12 @@ stages:
 variables:
     DOCKER_USERNAME: siddharth67
     IMAGE_VERSION: $CI_PIPELINE_ID
-    K8S_IMAGE: $DOCKER_USERNAME/solar-system:$IMAGE_VERSION
+    # K8S_IMAGE: $DOCKER_USERNAME/solar-system:$IMAGE_VERSION
+    K8S_IMAGE: $DOCKER_USERNAME/solar-system:1606875918
     MONGO_URI: 'mongodb+srv://supercluster.d83jj.mongodb.net/superData'
     MONGO_USERNAME: superuser
     MONGO_PASSWORD: $M_DB_PASSWORD
     SCAN_KUBERNETES_MANIFESTS: "true"
-    K8S_IMAGE: $DOCKER_USERNAME/solar-system:$IMAGE_VERSION
 
 .prepare_nodejs_environment:
   image: node:17-alpine3.14
