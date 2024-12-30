@@ -7,18 +7,19 @@ metadata:
   name: solar-system
   namespace: ${NAMESPACE}
 spec:
+    ingressClassName: webapprouting.kubernetes.azure.com
     rules:
-    - host: solar-system-${NAMESPACE}.${INGRESS_IP}.nip.io
+    - host: solar-system.${INGRESS_IP}.nip.io
       http:
         paths:
         - backend:
             service:
-              name: solar-system
+              name: solar-system-service
               port:
                 number: 3000
           path: /
           pathType: Prefix
     tls:
     - hosts:
-      - solar-system-${NAMESPACE}.${INGRESS_IP}.nip.io
+      - solar-system.${INGRESS_IP}.nip.io
       secretName: ingress-local-tls
