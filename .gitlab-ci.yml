@@ -153,23 +153,23 @@ k8s_deploy:
     - kubectl get nodes
     - export INGRESS_IP=$(kubectl get service -n app-routing-system nginx -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
     - echo $INGRESS_IP
-    #####
+    ##### Installation et configuration de cert-manager et d'un ClusterIssuer pour gérer les certificats TLS automatiquement
+    ##### Garantir que notre cluster Kubernetes peut sécuriser les communications via HTTPS 
     - kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.10.1/cert-manager.yaml
     - sleep 30
     - kubectl get pods -n cert-manager
-    - kubectl apply -f kubernetes/manifest/$NAMESPACE/clusterIssuer.yaml
+    - kubectl apply -f kubernetes/manifest/clusterIssuer.yaml
     - echo "Waiting for ClusterIssuer to be created..."
     - kubectl wait --for=condition=Ready clusterissuer --all --timeout=60s
     - kubectl get clusterissuer
     - kubectl describe clusterissuer letsencrypt
-    #####
+    ##### 
     - kubectl -n $NAMESPACE create secret generic mongo-db-creds --from-literal=MONGO_URI=$MONGO_URI --from-literal=MONGO_USERNAME=$MONGO_USERNAME --from-literal=MONGO_PASSWORD=$MONGO_PASSWORD --save-config --dry-run=client -o yaml | kubectl apply -f -
     - for i in kubernetes/manifest/*.yaml; do envsubst < $i | kubectl apply -f -; done
     - sleep 30
-    ####
+    ####  vérifier l’état des certificats TLS associés à l’ingress.
     - kubectl get certificate ingress-local-tls -n $NAMESPACE
     - kubectl describe certificate ingress-local-tls -n $NAMESPACE 
-    ####
     - kubectl -n $NAMESPACE get all,secret,ing
     - echo "INGRESS_URL=$(kubectl -n $NAMESPACE get ing -o jsonpath="{.items[0].spec.tls[0].hosts[0]}")" >> app_ingress_url.env
   artifacts:
