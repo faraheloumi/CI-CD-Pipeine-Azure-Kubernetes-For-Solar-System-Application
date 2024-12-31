@@ -161,7 +161,16 @@ To allow interaction with the Kubernetes cluster, the kubeconfig file was retrie
    git clone https://github.com/faraheloumi/CI-CD-Pipeline-Azure-Kubernetes-For-Solar-System-Application.git
    cd CI-CD-Pipeline-Azure-Kubernetes-For-Solar-System-Application
    ```
-#### 2. **Set Up a GitLab Project**
+
+
+#### 2. **Set Up .env**  
+```bash
+MONGO_URI=mongodb+srv://supercluster.d83jj.mongodb.net/superData
+MONGO_USERNAME=superuser
+MONGO_PASSWORD=SuperPassword
+```
+
+#### 3. **Set Up a GitLab Project**
 - Create a new project in GitLab.  
 - Add the GitLab CI/CD variables:  
    - Go to **Settings → CI/CD → Variables → Add variables**:
@@ -176,7 +185,7 @@ To allow interaction with the Kubernetes cluster, the kubeconfig file was retrie
 | `REPLICAS`        | `2`                       | Visible    |
 
 
-#### 3. **Create an Azure Kubernetes Cluster**
+#### 4. **Create an Azure Kubernetes Cluster**
 - Log in to Azure CLI:
   ```bash
   az login
@@ -186,7 +195,7 @@ To allow interaction with the Kubernetes cluster, the kubeconfig file was retrie
   az aks create --resource-group solarsystem_grp --name solar-systemCluster --tier free --generate-ssh-keys --node-vm-size Standard_B2s --node-count 2 --enable-app-routing
  ```
 
- #### 4. **Retrieve the Kubeconfig File**
+ #### 5. **Retrieve the Kubeconfig File**
  - Fetch the credentials for your AKS cluster:
  ```bash
   az aks get-credentials --resource-group solarsystem_grp --name solar-systemCluster
@@ -198,20 +207,20 @@ To allow interaction with the Kubernetes cluster, the kubeconfig file was retrie
     - **Visibility**: Visible
     - **Flags**: uncheck them
 
-#### 5. **Prepare Kubernetes Namespaces**
+#### 6. **Prepare Kubernetes Namespaces**
 - Install `kubectl` on your local machine following [this guide.](https://kubernetes.io/docs/tasks/tools/#kubectl)
 - Create namespaces for your environments in your local terminal:
 ```bash
     kubectl create namespace development
  ```
 
-### 6. **Push the Code to GitLab**
+### 7. **Push the Code to GitLab**
 Push the files in the cloned directory to the main branch:
 ```bash
 git push origin main
 ```
 
-### 7. **Trigger the Pipeline**  
+### 8. **Trigger the Pipeline**  
 This will automatically trigger the CI/CD pipeline on the `main` branch.
 - Go to **Build → Pipelines**.  
 - Click on the running pipeline to monitor the jobs.  
