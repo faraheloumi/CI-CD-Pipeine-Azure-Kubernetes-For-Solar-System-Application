@@ -41,7 +41,7 @@ The original **Solar System** project focuses on developing a platform that prov
 The Gitlab CI/CD pipeline follows a **stage-by-stage process** to automate development and deployment. Below is the visual workflow:
 
 <div align="center">
-    <img src="./images/CICD_pipeline.png" alt="CI/CD pipeline workflow">
+    <img src="./images/CICD pipeline.png" alt="CI/CD pipeline workflow">
 </div>
 
 The GitLab CI/CD pipeline automates the **integration, testing, and deployment** processes for the application, ensuring reliable and consistent delivery across different environments.
