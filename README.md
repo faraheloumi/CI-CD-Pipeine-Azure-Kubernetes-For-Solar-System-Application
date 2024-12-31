@@ -146,11 +146,7 @@ To allow interaction with the Kubernetes cluster, the kubeconfig file was retrie
 ## 📊 Results: CI/CD pipeline
 
 <div align="center">
-    <img src="./images/feature.png" alt="CI/CD pipeline feature">
-</div>
-
-<div align="center">
-    <img src="./images/main_pipeline.png" alt="CI/CD pipeline main">
+    <img src="./images/Resultat pipeline.png" alt="CI/CD pipeline feature">
 </div>
 
 ## 🔧 Setup and Usage
@@ -163,8 +159,8 @@ To allow interaction with the Kubernetes cluster, the kubeconfig file was retrie
 
 #### 1. **Clone the Repository**  
    ```bash
-   git clone https://github.com/hibadaoud/CI-CD-Pipeine-Azure-Kubernetes-For-FruitVision-Application.git
-   cd CI-CD-Pipeine-Azure-Kubernetes-For-FruitVision-Application
+   git clone https://github.com/faraheloumi/CI-CD-Pipeline-Azure-Kubernetes-For-Solar-System-Application.git
+   cd CI-CD-Pipeline-Azure-Kubernetes-For-Solar-System-Application
    ```
 #### 2. **Set Up a GitLab Project**
 - Create a new project in GitLab.  
@@ -188,13 +184,13 @@ To allow interaction with the Kubernetes cluster, the kubeconfig file was retrie
   ```
 - Create the AKS Cluster:
  ```bash
-  az aks create --resource-group fruitvision_grp --name FruitVisionCluster --tier free --generate-ssh-keys --node-vm-size Standard_B2s --node-count 2 --enable-app-routing
+  az aks create --resource-group solarsystem_grp --name solar-systemCluster --tier free --generate-ssh-keys --node-vm-size Standard_B2s --node-count 2 --enable-app-routing
  ```
 
  #### 4. **Retrieve the Kubeconfig File**
  - Fetch the credentials for your AKS cluster:
  ```bash
-  az aks get-credentials --resource-group fruitvision_grp --name FruitVisionCluster
+  az aks get-credentials --resource-group solarsystem_grp --name solar-systemCluster
  ```
  - Copy the content of the Kubeconfig file and add it to GitLab CI/CD variables:
     - **Key**: DEV_KUBE_CONFIG
@@ -209,91 +205,31 @@ To allow interaction with the Kubernetes cluster, the kubeconfig file was retrie
 ```bash
     kubectl create namespace development
  ```
- #### 6. **Create GitLab Agent for Kubernetes**
-- Go to **Operate → Kubernetes Clusters → Connect a Cluster → Register Agent with the UI**.
-- Enter the agent name: `fruitvision-gitlab-agent`
-- Copy and run the Helm installation code provided by GitLab, in your terminal.
-- Verify the agent connection:
-    - Go to **Operate → Kubernetes Clusters**
-    - Ensure the **Configuration** field is set to `.gitlab/agents/fruitvision-gitlab-agent`.
 
-### 7. **Set Up Environments in GitLab**
-
-- Go to **Operate → Environments → New Environment**:
-
-    - **Production**:  
-    - Name: `Production` → Save.  
-
-    - **Staging**:  
-    - Name: `Staging`.  
-    - GitLab Agent: Select the newly added agent → Save.  
-
-- Add **Environment-Specific Variables**:
-
-| **Key**     | **Value**      | **Environment** | **Visibility**    |
-|-------------|----------------|-----------------|-------------|
-| `NAMESPACE` | `production`   | Production      | Visible     |
-| `NAMESPACE` | `staging`      | Staging         | Visible     |
-| `REPLICAS`  | `5`            | Production      | Visible     |
-| `REPLICAS`  | `4`            | Staging         | Visible     |
-
-### 8. **Push the Code to GitLab**
-Push the files in the cloned directory to the feature branch:
+### 6. **Push the Code to GitLab**
+Push the files in the cloned directory to the main branch:
 ```bash
-git checkout -b feature
-git push origin feature
+git push origin main
 ```
 
-### 9. **Trigger the Pipeline**  
-This will automatically trigger the CI/CD pipeline on the `feature` branch.
+### 7. **Trigger the Pipeline**  
+This will automatically trigger the CI/CD pipeline on the `main` branch.
 - Go to **Build → Pipelines**.  
 - Click on the running pipeline to monitor the jobs.  
 
-### 10. **Merge Request**  
-Open a merge request to merge changes into the `main` branch:  
-- Go to **Repository → Code → Feature Branch → Merge Request**.  
-- Assign everything to yourself and create the merge request.  
-
-### 11. **Accept Merge Request**  
-Once the pipeline on the `feature` branch is successful ✅:  
-- Accept the Merge request --> This will automatically trigger the CI/CD pipeline on the `main` branch.
-
-### 12. **Run Production Deployment**  
-Once the `stage-deploy` stage on the `main` branch is successful ✅:  
-- Click on the **prod-deploy** stage to run the production deployment.  
-
-
-### 13. **Verify the Deployment**  
-- Check the deployment URLs, shown in the `prod_deploy' job, in a browser to test the services functionality.  
-- The production deployment URL will be dynamically updated in **Firebase Remote Config** and then fetched by the flutter application. 
-
-### 14. **Run Flutter Application**:
-   - Navigate to the Flutter root directory and install dependencies:
-     ```bash
-     flutter pub get
-     ```
-
-   - Connect your device/emulator and run the app:
-     ```bash
-     flutter run
-     ```
-   - Check if the deployed urls are added automatically and the services are working as expected.
 
 ## 🔮 Future Considerations
 
-1. **Optimization of Deployed Services**:  
-   Future iterations of the project could focus on optimizing the deployed services to improve performance and resource efficiency. This includes:
-   - Fine-tuning Kubernetes resource allocation (e.g., CPU and memory limits) to match the workload requirements while minimizing costs.
-   - Implementing autoscaling policies for pods based on real-time traffic patterns and load metrics.
-   - Enhancing the monitoring setup with tools like Prometheus and Grafana to gain deeper insights into application performance, identify bottlenecks, and ensure reliability under varying conditions.
+1. Extend the current setup to include **staging and production environments** in addition to **the development environment**. This will enable thorough testing and validation of changes in staging before rolling them out to production, ensuring higher stability and reliability.
 
-2. **Canary Deployment for Progressive Rollouts**:  
-   Implementing a canary deployment strategy would allow rolling out updates to a subset of users before fully deploying to all users. This approach reduces risks associated with deploying new versions by:
-   - Gradually splitting traffic between the existing and new versions, ensuring stable functionality.
-   - Using user feedback and monitoring metrics (e.g., error rates, latency) to validate the new version's performance.
-   - Automating rollback mechanisms to revert to the previous version if any issues are detected during the canary rollout.
+2. Adopt a **feature branch workflow** for development. All changes will first be pushed to dedicated feature branches. Once the features are reviewed, tested, and approved, they **will be merged into the main branch** to maintain a clean and stable codebase. This approach will improve collaboration, version control, and overall code quality.
 
 3. **Integration of Continuous Security Practices**:  
    Security enhancements can be integrated into the CI/CD pipeline to ensure robust protection of the application and user data:
    - Adding runtime security checks to detect anomalies in deployed services.
    - Utilizing Kubernetes features like Pod Security Policies and Network Policies to limit attack surfaces and enforce security best practices.
+
+## Project by
+<a href="https://github.com/faraheloumi/CI-CD-Pipeline-Azure-Kubernetes-For-Solar-System-Application/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=faraheloumi/CI-CD-Pipeline-Azure-Kubernetes-For-Solar-System-Application" />
+</a>
