@@ -8,7 +8,6 @@
 - [⚙️ Technologies Used](#️-technologies-used)  
 - [🏛️ Architecture](#-architecture)  
 - [☸️ Kubernetes Architecture and Deployment](#-kubernetes-architecture-and-deployment)  
-- [🌐 Firebase Remote Config Integration](#-firebase-remote-config-integration)
 - [📊 Results: CI/CD pipeline](#-results-cicd-pipeline)
 - [🔧 Setup and Usage](#-setup-and-usage)  
 - [🔮 Future Considerations](#-future-considerations) 
